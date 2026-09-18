@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Datasets / malware samples
+dataset/
+datasets/
+*.exe
+*.dll
+*.bin
+*.zip
+*.7z
+
+# Trained models / large files
+*.h5
+*.keras
+*.pth
+*.pt
+*.pkl
+*.joblib
+
+# Secrets
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+myenv/
