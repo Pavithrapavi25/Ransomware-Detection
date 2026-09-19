@@ -1,30 +1,93 @@
 # Ransomware Detection Using Deep Learning
 
-A deep learning-based cybersecurity project that uses **visual representations of executable files** and Convolutional Neural Networks (CNNs) to identify malicious software patterns.
+A deep learning-based cybersecurity application that uses **visual representations of executable files** and Convolutional Neural Networks (CNNs) to classify samples based on learned malware-related patterns.
 
-The project converts executable files into grayscale images by mapping their raw byte values to pixel intensities. A CNN can then learn visual patterns associated with malicious and benign executables.
+The system converts executable byte data into grayscale images and uses a CNN-based model for classification through a Flask web application.
 
-> **Note:** This project performs static analysis on byte-derived images. Executable files are not run during the detection process.
+> **Note:** This project performs static analysis on byte-derived images. Executable files are not executed during the detection process.
 
 ---
 
 ## 🚀 Project Overview
 
-Traditional malware detection methods often rely on known signatures or manually engineered features. These approaches can become less effective when malware is modified, packed, or obfuscated.
+Traditional malware detection techniques often rely on signatures or manually engineered features. Modified, packed, or obfuscated malware can make such approaches challenging.
 
-This project explores an image-based approach:
+This project explores an image-based deep-learning approach:
 
 **Executable File → Raw Bytes → Byte Image → CNN → Classification**
 
-Instead of executing an executable file, its binary contents are transformed into an image. The resulting image preserves structural patterns from different regions of the executable, allowing a CNN to learn visual representations of those patterns.
+Instead of executing an executable file, its binary contents can be represented as an image. The resulting image preserves structural patterns from different regions of the executable, allowing a CNN to learn visual representations of those patterns.
+
+The project also provides a web interface for user authentication, sample upload, prediction, and result visualization.
 
 ---
 
 ## 📌 Problem Statement
 
-Ransomware and other malware can be modified to evade traditional signature-based detection.
+Ransomware and other malware can be modified to make traditional signature-based detection more difficult.
 
 The goal of this project is to investigate whether **deep learning on byte-level visual representations of executable files** can learn patterns that distinguish malicious software from benign software.
+
+---
+
+## 💡 Solution
+
+The application combines binary-to-image transformation, CNN-based classification, and a web interface into one workflow.
+
+**Executable Data → Byte Representation → Grayscale Image → CNN Model → Classification → Result**
+
+The system treats executable content as data for static analysis rather than executing the executable itself.
+
+---
+
+## ✨ Key Features
+
+### 🔐 User Authentication
+
+* User registration
+* User login
+* Authentication-based application access
+* Session-based user workflow
+
+### 🧠 CNN-Based Classification
+
+* Deep-learning-based classification
+* Image-based malware analysis
+* CNN feature learning
+* Prediction on image representations of executable data
+
+### 🖼️ Byte Image Analysis
+
+* Executable bytes represented as image pixels
+* Grayscale image processing
+* Static analysis approach
+* Visual representation of binary structures
+
+### 📤 File Testing
+
+* Upload a supported sample for analysis
+* Process the sample through the prediction pipeline
+* Display the model classification result
+
+### 📊 Prediction Results
+
+The application provides classification results such as:
+
+* **Malware**
+* **Benign**
+
+The prediction represents the model's classification based on patterns learned from its training data.
+
+### 🌐 Web Application
+
+The project includes a Flask-based web interface for:
+
+* Registration
+* Login
+* Dashboard
+* File testing
+* Prediction
+* Result visualization
 
 ---
 
@@ -33,14 +96,15 @@ The goal of this project is to investigate whether **deep learning on byte-level
 The system follows these main steps:
 
 1. Collect executable-file samples from the dataset.
-2. Read the executable as raw bytes.
+2. Read executable data as raw bytes.
 3. Convert byte values into pixel intensities.
-4. Arrange the bytes into a 2-D image.
-5. Preprocess the generated images.
-6. Feed the images into a CNN-based deep learning model.
-7. Train the model on the available classes.
-8. Evaluate the model on unseen test samples.
+4. Arrange the bytes into a 2-D image representation.
+5. Preprocess the generated image.
+6. Feed the image into the CNN model.
+7. Train the model using the available dataset.
+8. Evaluate the model on test samples.
 9. Use the trained model to classify new samples within the learned dataset distribution.
+10. Display the prediction through the web application.
 
 ### Pipeline
 
@@ -49,15 +113,17 @@ Executable File
        ↓
    Raw Bytes
        ↓
- Byte-to-Pixel Mapping
+Byte-to-Pixel Mapping
        ↓
-   Grayscale Image
+ Grayscale Image
        ↓
- Image Preprocessing
+Image Preprocessing
        ↓
-       CNN
+      CNN
        ↓
- Classification
+Classification
+       ↓
+ Web Result
 ```
 
 ---
@@ -68,9 +134,7 @@ The generated image is **not a screenshot of the executable running**.
 
 It is a visual representation of the executable's raw binary data.
 
-Each byte has a value between **0 and 255**, which can be mapped directly to a grayscale pixel intensity.
-
-For example:
+Each byte has a value between **0 and 255**, which can be mapped to a grayscale pixel intensity.
 
 ```text
 Byte value 0   → Black
@@ -81,16 +145,16 @@ The bytes are arranged sequentially into rows and columns to create the image.
 
 Different parts of an executable can produce different visual patterns.
 
-### Common structures represented in the image
+### Common Structures Represented in the Image
 
 * **PE Header** — executable metadata and structural information
 * **`.text` section** — program code
-* **`.rsrc` section** — resources such as icons, strings, and other embedded data
-* **Packed/encrypted regions** — often appear as high-entropy or noisy areas
-* **Repeated data and padding** — can produce recurring patterns
+* **`.rsrc` section** — resources such as icons, strings, and embedded data
+* **Packed/encrypted regions** — may appear as high-entropy or noisy areas
+* **Repeated data and padding** — may produce recurring patterns
 * **Strings and structured data** — may produce recognizable visual textures
 
-Therefore, the image acts as a visual fingerprint of the executable's underlying byte structure.
+The resulting image can therefore act as a visual representation of the executable's underlying byte structure.
 
 ---
 
@@ -98,43 +162,41 @@ Therefore, the image acts as a visual fingerprint of the executable's underlying
 
 Convolutional Neural Networks are designed to identify spatial patterns such as:
 
-* edges
-* textures
-* shapes
-* local structures
-* repeated patterns
+* Edges
+* Textures
+* Shapes
+* Local structures
+* Repeated patterns
 
-Executable byte images contain spatial patterns created by the organization of binary data.
+Executable byte images can contain spatial patterns created by the organization of binary data.
 
-Different malware families and executable types can have different:
+Different executable and malware samples may have differences in:
 
-* packing characteristics
-* section layouts
-* resource structures
-* entropy distributions
-* code/data patterns
+* Packing characteristics
+* Section layouts
+* Resource structures
+* Entropy distributions
+* Code/data patterns
 
-A CNN can learn these patterns automatically rather than requiring every feature to be manually designed.
+A CNN can learn such patterns automatically instead of requiring every feature to be manually designed.
 
 ---
 
 ## 🛡️ Why Use EXE-Derived Images Instead of Normal Images?
 
-The images used by this project are specifically derived from executable files.
+The images used by this project are specifically derived from executable data.
 
-A normal photograph, cartoon, or unrelated image does not contain information about the binary structure of an executable.
-
-Therefore:
+A normal photograph or unrelated image does not represent the binary structure of an executable.
 
 ```text
-EXE → Byte Image → Meaningful for malware classification
+EXE → Byte Image → Represents executable byte structure
 
-Photo → Image → Unrelated to executable structure
+Photo → Normal Image → Unrelated to executable structure
 ```
 
-The important information is not the fact that the data is an image.
+The important information is not simply that the input is an image.
 
-The important information is that **the image encodes the executable's raw bytes**.
+The important information is that **the image encodes executable byte data**.
 
 ---
 
@@ -144,24 +206,24 @@ This project uses the **Malware as Images** dataset available on Kaggle.
 
 **Dataset:** Matthew Fields — Malware as Images
 
-[Kaggle Dataset: Malware as Images](https://www.kaggle.com/datasets/matthewfields/malware-as-images?utm_source=chatgpt.com)
+[Malware as Images Dataset on Kaggle](https://www.kaggle.com/datasets/matthewfields/malware-as-images?utm_source=chatgpt.com)
 
 The dataset contains visual representations of executable files generated from their binary contents.
 
-> Dataset structure and class distribution may vary depending on the specific version/subset used for training.
+> Dataset structure and class distribution may vary depending on the specific version or subset used for training.
 
 ---
 
 ## 🏗️ Model Approach
 
-The project uses a **Convolutional Neural Network (CNN)** to learn patterns from malware images.
+The project uses a **Convolutional Neural Network (CNN)** to learn patterns from malware image representations.
 
-Typical processing includes:
+The general processing workflow is:
 
 ```text
 Dataset
    ↓
-Train / Validation / Test Split
+Train / Validation / Test Data
    ↓
 Image Preprocessing
    ↓
@@ -174,7 +236,7 @@ Classification Layer
 Prediction
 ```
 
-The exact architecture and training configuration depend on the implementation used in the project.
+The trained model is integrated into the Flask application for prediction.
 
 ---
 
@@ -184,9 +246,9 @@ The exact architecture and training configuration depend on the implementation u
 
 * **Static analysis** — executable files do not need to be executed.
 * **Automatic feature learning** — CNNs learn image patterns without extensive manual feature engineering.
-* **Fast inference** — image-based classification can be efficient once the model is trained.
-* **Scalable preprocessing** — executable files can be converted into standardized image representations.
-* **Transfer learning compatibility** — pretrained computer-vision architectures can potentially be adapted for this type of classification.
+* **Image-based representation** — binary data can be represented in a format suitable for computer-vision techniques.
+* **Efficient inference** — once trained, the model can perform predictions through the application.
+* **Transfer-learning compatibility** — computer-vision architectures can potentially be adapted to this type of classification.
 
 ---
 
@@ -196,14 +258,14 @@ Image-based malware classification is one approach among several.
 
 ### 1. Static PE Analysis
 
-Extract features such as:
+Features can be extracted from executable files, including:
 
 * PE header information
-* imported functions
-* section sizes
-* entropy
-* strings
-* metadata
+* Imported functions
+* Section sizes
+* Entropy
+* Strings
+* Metadata
 
 These features can then be used with traditional machine-learning algorithms such as Random Forest or SVM.
 
@@ -218,20 +280,20 @@ The executable is executed in a controlled environment such as a sandbox and its
 Possible signals include:
 
 * API calls
-* file-system activity
-* network activity
-* process behavior
-* registry modifications
+* File-system activity
+* Network activity
+* Process behavior
+* Registry modifications
 
 **Advantage:** Can reveal runtime behavior.
 
-**Disadvantage:** More resource-intensive and requires a carefully isolated execution environment.
+**Disadvantage:** Requires a carefully isolated execution environment and can be more resource-intensive.
 
 ---
 
 ### 3. Hybrid Analysis
 
-A more comprehensive system can combine:
+A more comprehensive system can combine multiple sources of information:
 
 ```text
 Static PE Features
@@ -243,7 +305,7 @@ Dynamic Behavior
 Combined Detection System
 ```
 
-This can provide multiple sources of information, although it also increases system complexity.
+This can provide additional information but also increases system complexity.
 
 ---
 
@@ -253,14 +315,14 @@ The model's performance depends heavily on the dataset used for training.
 
 A model trained on a particular dataset distribution may not generalize equally well to:
 
-* newly created malware families
-* previously unseen ransomware
-* heavily obfuscated samples
-* different packing techniques
-* executables from different distributions
-* samples significantly different from the training data
+* Newly created malware families
+* Previously unseen ransomware
+* Heavily obfuscated samples
+* Different packing techniques
+* Executables from different distributions
+* Samples significantly different from the training data
 
-For example, if the model performs poorly on an unseen ransomware sample, this does not necessarily mean that the image-based approach is ineffective. It can indicate a **distribution difference between the training data and the new sample**.
+If the model performs poorly on an unseen sample, this can indicate a **distribution difference between the training data and the new sample**.
 
 Improving generalization would require more diverse training data, appropriate validation strategies, and evaluation on representative unseen samples.
 
@@ -270,17 +332,17 @@ Improving generalization would require more diverse training data, appropriate v
 
 This project is designed as a **static malware-analysis experiment**.
 
-The executable contents are treated as data and converted into images rather than being executed.
+Executable contents are treated as data and represented as images rather than being executed during the image-based detection process.
 
 If working with actual malware samples, they should only be handled in an appropriately isolated and controlled cybersecurity environment.
 
-**Do not execute unknown or malicious executables on a personal computer.**
+> **Do not execute unknown or malicious executables on a personal computer.**
 
 ---
 
 ## 📈 Evaluation
 
-Model performance should be evaluated using metrics such as:
+Model performance can be evaluated using:
 
 * Accuracy
 * Precision
@@ -288,54 +350,137 @@ Model performance should be evaluated using metrics such as:
 * F1-score
 * Confusion Matrix
 
-For malware detection, relying on accuracy alone can be misleading when the classes are imbalanced. Precision and recall should also be considered.
+For malware detection, accuracy alone can be misleading when classes are imbalanced. Precision and recall should also be considered.
 
-> Add the actual measured results from your trained model here rather than using estimated values.
-
-Example:
-
-```text
-Test Accuracy : XX.XX%
-Precision     : XX.XX%
-Recall        : XX.XX%
-F1 Score      : XX.XX%
-```
+Actual measured results should be reported from the trained model rather than estimated values.
 
 ---
 
-## 🛠️ Technologies Used
+## 🛠️ Technology Stack
+
+### Machine Learning
 
 * Python
 * TensorFlow / Keras
+* PyTorch
 * NumPy
 * Pandas
-* Matplotlib
 * Scikit-learn
 * CNN / Deep Learning
+
+### Web Application
+
+* Flask
+* HTML
+* CSS
+* Jinja Templates
+
+### Database
+
+* MySQL
+
+### Data & Visualization
+
 * Image Processing
+* Matplotlib
 * Kaggle Dataset
 
-> Update this list if your implementation uses a different framework or additional libraries.
+### Development
+
+* Jupyter Notebook
+* Git
+* GitHub
 
 ---
 
 ## 📂 Project Structure
 
 ```text
-Ransomware-Detection/
+Ransomware_CNN/
 │
-├── dataset/
-├── notebooks/
-├── models/
-├── src/
-├── results/
+├── samples/
+│   ├── test.png
+│   ├── test2.png
+│   ├── test3.png
+│   ├── test4.png
+│   ├── test5.png
+│   └── test6.png
+│
 ├── screenshots/
+│   ├── BenignFile-Testing.png
+│   ├── BenignSample.png
+│   ├── Dashboard1.png
+│   ├── Dashboard2.png
+│   ├── Dashboard3.png
+│   ├── Dashboard4.png
+│   ├── Login.png
+│   ├── MalwareFile-Testing.png
+│   ├── MalwareSample.png
+│   ├── Prediction.png
+│   └── Register.png
+│
+├── static/
+│   └── style.css
+│
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── login.html
+│   ├── nav.html
+│   ├── predict.html
+│   ├── register.html
+│   └── result.html
+│
+├── app.py
+├── ransomware.sql
+├── ransomware_cnn.docx
 ├── requirements.txt
+├── train.ipynb
 ├── README.md
-└── ...
+└── .gitignore
 ```
 
-Adjust the structure above to match the actual files in the repository.
+---
+
+## 📸 Screenshots
+
+### 🔐 Login
+
+![Login](screenshots/Login.png)
+
+### 📝 Register
+
+![Register](screenshots/Register.png)
+
+### 📊 Dashboard
+
+![Dashboard](screenshots/Dashboard1.png)
+
+![Dashboard Overview](screenshots/Dashboard2.png)
+
+![Dashboard Analytics](screenshots/Dashboard3.png)
+
+![Dashboard Details](screenshots/Dashboard4.png)
+
+### 🧪 Prediction
+
+![Prediction](screenshots/Prediction.png)
+
+### 🦠 Malware Sample
+
+![Malware Sample](screenshots/MalwareSample.png)
+
+### 🔬 Malware File Testing
+
+![Malware File Testing](screenshots/MalwareFile-Testing.png)
+
+### 🟢 Benign Sample
+
+![Benign Sample](screenshots/BenignSample.png)
+
+### 🔬 Benign File Testing
+
+![Benign File Testing](screenshots/BenignFile-Testing.png)
 
 ---
 
@@ -346,13 +491,14 @@ Potential improvements include:
 * Training on a larger and more diverse malware dataset
 * Adding more ransomware families
 * Testing against completely unseen samples
-* Using transfer-learning architectures
 * Comparing multiple CNN architectures
+* Using transfer-learning architectures
 * Adding explainability techniques such as Grad-CAM
 * Combining image-based features with PE metadata
 * Evaluating robustness against packed and obfuscated executables
-* Building a safe web interface for static-file classification
-* Monitoring false-positive and false-negative rates
+* Improving false-positive and false-negative monitoring
+* Expanding the web application
+* Adding additional cybersecurity analysis features
 
 ---
 
@@ -368,6 +514,9 @@ Through this project, I explored:
 * Model evaluation
 * Malware visualization
 * Dataset limitations and generalization
+* Flask web application development
+* MySQL database integration
+* User authentication
 * Cybersecurity considerations when handling executable files
 
 ---
@@ -392,8 +541,10 @@ Machine-learning predictions are dependent on the training data, preprocessing p
 
 ---
 
-## 👩‍💻 Author
+## 👩‍💻 Developer
 
 **P N Pavithra**
 
-A cybersecurity and machine-learning project exploring deep-learning approaches to malware detection.
+AI & Data Science Graduate
+
+A cybersecurity and machine-learning project exploring deep-learning approaches to malware detection through executable byte-image representations and CNN-based classification.
